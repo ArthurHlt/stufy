@@ -1,6 +1,6 @@
 # Stufy [![Build Status](https://travis-ci.com/ArthurHlt/stufy.svg?branch=master)](https://travis-ci.com/ArthurHlt/stufy)
 
-Stufy is a standalone cli for managing [statusfy](https://statusfy.co).
+Stufy is a standalone cli for managing [statusfy](https://statusfy.co) deployment.
 
 You will able to create incident events and scheduleds tasks and managed them without having nodejs stack installed.
 

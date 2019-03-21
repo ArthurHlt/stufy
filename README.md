@@ -9,6 +9,8 @@ commits on a git repository and be available as gitlab/github pages. With this i
 create/update/delete incidents and scheduleds tasks by simply set a git repo as a target. You don't even need git installed 
 on your machine.
 
+**Important**: For now stufy only support config file in yaml.
+
 ## install
 
 ### On *nix system

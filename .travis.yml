@@ -1,0 +1,28 @@
+language: go
+go:
+  - '1.12'
+install:
+  - go get github.com/onsi/ginkgo/ginkgo
+  - export GO111MODULE=on
+script:
+  - |
+    if [ "$(go fmt ./...)"]; then
+      echo "You need to run `go fmt`"
+      exit 1
+    fi
+  - go test .
+after_success:
+  - bin/build-all.sh
+  - rm out/stufy
+  - rm out/stufy.exe
+deploy:
+  provider: releases
+  api_key:
+    secure: ly+w+zBOnLpCllvwUJBlHefjkBUYOZJBZqjHJvD6QtvqW7HZ2dWUhIK/RuF5UnzkTNg7fZN4cOpyY9uSV3Y4qpgj72dPrrRmrHbSZfEgXIIi6Pd3lRkXM1ol9cLJKl6UPG4bAQF0gucjwP+mBHJR1zCRWfXiz7Zv2a9iVTViZY5nvOV/WQmR8c0qfOGmIyBXAWrjjB1zswy3M3FZLoqufhGtkZ/P2xvHOXRdnYC4Hq+jIBB+nQle6ukXavzkIwWXwmsVucnOCCqocV5Spqo9J8d3jS07o7so62EawMalZFV6K0sCAkYqjvEZpZpmMO2TOALIDtbatJul8sMa0xljecufN/2/nFccndJiG780g3S7GOWXbp17xELAD2L6hgw2S/yfy7TgY04/WoIeqcRJuEWdFEC33HMkyEyq8zqMNL+yQ5mKe/4Rs8GrzHFqxy+Mw7LRMxA17JTjKajRXuFx6rh4OTQ9vNlLYbjsIaP6N7VuzxLEolHRXLEnf37mymGqaFWjEFobvLCha3Az+fYcW70p2lTz0ozo71anAUtCSbOQ9GR3p0Fvj82YqBlq+QbpRZoZUyEhsB1hunwJApNYMDWKUgh9dBQoTYjaABWMq0lU5kJiz5gDVsFbUatUg3plOMRMTaa2vHWmWGlPpBYpcMmnKQH6/sHw1fgL3LRaKRs=
+  file_glob: true
+  file:
+    - 'out/*'
+  on:
+    tags: true
+    all_branches: true
+  skip_cleanup: true

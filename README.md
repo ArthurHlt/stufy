@@ -69,3 +69,24 @@ Available commands:
   update-incident   Update an existing incident (aliases: u)
   update-scheduled  Update an existing scheduled task (aliases: us)
 ```
+
+## Auto completion
+
+Here is an example how to activate bash auto completion for stufy:
+
+```bash
+_completion_stufy() {
+    # All arguments except the first one
+    args=("${COMP_WORDS[@]:1:$COMP_CWORD}")
+
+    # Only split on newlines
+    local IFS=$'\n'
+
+    # Call completion (note that the first element of COMP_WORDS is
+    # the executable itself)
+    COMPREPLY=($(GO_FLAGS_COMPLETION=1 ${COMP_WORDS[0]} "${args[@]}"))
+    return 0
+}
+
+complete -F _completion_stufy stufy
+```

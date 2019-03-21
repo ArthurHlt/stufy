@@ -70,6 +70,8 @@ Available commands:
   update-scheduled  Update an existing scheduled task (aliases: us)
 ```
 
+**Note**: When you choose to open editor you can also set default editor with env var `EDITOR` or `VISUAL`
+
 ## Auto completion
 
 Here is an example how to activate bash auto completion for stufy:

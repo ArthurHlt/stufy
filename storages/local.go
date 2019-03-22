@@ -1,6 +1,7 @@
 package storages
 
 import (
+	"fmt"
 	"github.com/ArthurHlt/open-golang/open"
 	"github.com/ArthurHlt/stufy/model"
 	"github.com/ericaro/frontmatter"
@@ -63,6 +64,10 @@ func (l Local) Incidents() (model.Incidents, error) {
 		incidents = append(incidents, tmpIncident)
 	}
 	return incidents, nil
+}
+
+func (l Local) Resync() error {
+	return fmt.Errorf("no resync is available on local target")
 }
 
 func (l Local) CreateIncident(incident model.Incident) error {

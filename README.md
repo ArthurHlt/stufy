@@ -66,6 +66,7 @@ Available commands:
   new-incident      Create a new incident (aliases: n)
   new-scheduled     Create a new scheduled task (aliases: ns)
   remove-alias      Remove an alias (aliases: ra)
+  resync            Resynchronize your target (useful when merging issue on git repo) (aliases: r)
   update-incident   Update an existing incident (aliases: u)
   update-scheduled  Update an existing scheduled task (aliases: us)
 ```

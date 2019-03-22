@@ -18,6 +18,7 @@ type Storage interface {
 	UpdateIncident(model.Incident) error
 	DeleteIncident(model.Incident) error
 	Open(model.Incident) error
+	Resync() error
 }
 
 func FindStorage(target string) Storage {

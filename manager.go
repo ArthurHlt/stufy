@@ -283,6 +283,10 @@ func (m *Manager) ListIncident(showResolved bool) (model.Incidents, error) {
 	return filtered, nil
 }
 
+func (m *Manager) Resync() error {
+	return m.storage.Resync()
+}
+
 func (m *Manager) ListScheduled(showResolved bool) (model.Incidents, error) {
 	filtered := make([]model.Incident, 0)
 	var incidents []model.Incident

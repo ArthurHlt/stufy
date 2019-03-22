@@ -112,6 +112,21 @@ func (s Git) Incidents() (model.Incidents, error) {
 	return s.local.Incidents()
 }
 
+func (s Git) Resync() error {
+	os.RemoveAll(s.folder)
+	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
+	spin.Prefix = fmt.Sprintf("Resynchronize %s in temp dir ", s.target)
+	spin.FinalMSG = fmt.Sprintf("Finished resynchronize %s\n", s.target)
+	spin.Start()
+	defer spin.Stop()
+	_, err := git.PlainClone(s.folder, false, &git.CloneOptions{
+		URL:          s.target,
+		Auth:         s.authMethod,
+		SingleBranch: true,
+	})
+	return err
+}
+
 func (s Git) CreateIncident(incident model.Incident) error {
 	err := s.local.CreateIncident(incident)
 	if err != nil {

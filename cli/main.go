@@ -29,6 +29,10 @@ func (Target) Complete(match string) []flags.Completion {
 			Item: a.Name,
 		})
 	}
+	if len(items) == 0 {
+		f := flags.Filename("")
+		return f.Complete(match)
+	}
 	return items
 }
 

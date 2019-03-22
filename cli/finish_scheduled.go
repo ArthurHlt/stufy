@@ -3,15 +3,46 @@ package main
 import (
 	"fmt"
 	"github.com/ArthurHlt/stufy"
+	"github.com/ArthurHlt/stufy/messages"
+	"github.com/jessevdk/go-flags"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
 type FinishScheduled struct {
+	InlineFlag
+	Filename FilenameScheduled `short:"f" long:"filename" description:"Set filename associated to update"`
 }
 
 var finishScheduled FinishScheduled
 
 func (c *FinishScheduled) Execute(_ []string) error {
+	if c.Inline {
+		return c.ExecuteInline()
+	}
+	return c.ExecuteSurvey()
+}
+
+func (c *FinishScheduled) ExecuteInline() error {
+	if c.Filename == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Filename flag required (--filename, -f)",
+		}
+	}
+	err := manager.FinishScheduled(stufy.RequestUnscheduled{
+		Filename: string(c.Filename),
+		Confirm:  true,
+	})
+	if err != nil {
+		return err
+	}
+	messages.Printfln("Scheduled task %s has been mark as %s",
+		messages.C.Cyan(c.Filename), messages.C.Green("finished"),
+	)
+	return nil
+}
+
+func (c *FinishScheduled) ExecuteSurvey() error {
 	scheduleds, err := manager.ListScheduled(false)
 	if err != nil {
 		return err

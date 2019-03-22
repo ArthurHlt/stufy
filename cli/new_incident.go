@@ -2,16 +2,68 @@ package main
 
 import (
 	"github.com/ArthurHlt/stufy"
+	"github.com/ArthurHlt/stufy/messages"
 	"github.com/ArthurHlt/stufy/model"
+	"github.com/jessevdk/go-flags"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
 type NewIncident struct {
+	InlineFlag
+	SeverityFlag
+	Cause       string `short:"c" long:"cause" description:"Cause of the incident"`
+	Description string `short:"d" long:"description" description:"Description of the incident"`
 }
 
 var newIncident NewIncident
 
 func (c *NewIncident) Execute(_ []string) error {
+	if c.Inline {
+		return c.ExecuteInline()
+	}
+	return c.ExecuteSurvey()
+}
+
+func (c *NewIncident) ExecuteInline() error {
+	if len(c.Systems) == 0 {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Affected system flag required (--system, -s)",
+		}
+	}
+	if c.Cause == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Cause flag required (--cause, -c)",
+		}
+	}
+	if c.Severity == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Severity flag required (--severity, -e)",
+		}
+	}
+	if c.Description == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Description flag, (--description, -d)",
+		}
+	}
+	err := manager.CreateIncident(stufy.RequestCreate{
+		Systems:     c.Systems.StringSlice(),
+		Description: c.Description,
+		Severity:    c.Severity,
+		Cause:       c.Cause,
+	})
+	if err != nil {
+		return err
+	}
+	messages.Println("Incident has been", messages.C.Green("added"))
+	return nil
+}
+
+func (c *NewIncident) ExecuteSurvey() error {
+
 	config, err := manager.Config()
 	if err != nil {
 		return err

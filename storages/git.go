@@ -63,7 +63,10 @@ func NewGit(target string) *Git {
 	}
 	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 	spin.Prefix = fmt.Sprintf("Cloning %s in temp dir ", target)
-	spin.Start()
+	if !messages.StopShow() {
+		spin.Start()
+	}
+
 	repo, err := git.PlainClone(dir, false, &git.CloneOptions{
 		URL:          target,
 		Auth:         authMethod,
@@ -98,7 +101,9 @@ func (s Git) Incidents() (model.Incidents, error) {
 	}
 	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 	spin.Prefix = "Pulling changes from remote "
-	spin.Start()
+	if !messages.StopShow() {
+		spin.Start()
+	}
 	err = w.Pull(&git.PullOptions{
 		Auth:         s.authMethod,
 		RemoteName:   "origin",
@@ -117,7 +122,9 @@ func (s Git) Resync() error {
 	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 	spin.Prefix = fmt.Sprintf("Resynchronize %s in temp dir ", s.target)
 	spin.FinalMSG = fmt.Sprintf("Finished resynchronize %s\n", s.target)
-	spin.Start()
+	if !messages.StopShow() {
+		spin.Start()
+	}
 	defer spin.Stop()
 	_, err := git.PlainClone(s.folder, false, &git.CloneOptions{
 		URL:          s.target,
@@ -187,7 +194,9 @@ func (s Git) pushCommit(incident model.Incident, message string, remove bool) er
 	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 	spin.Prefix = "Push changes in remote"
 	spin.FinalMSG = "Finished push changes in remote"
-	spin.Start()
+	if !messages.StopShow() {
+		spin.Start()
+	}
 	defer func() {
 		spin.Stop()
 		messages.Print("\r\n")

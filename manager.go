@@ -125,13 +125,18 @@ func (m Manager) UpdateIncident(req RequestUpdate) error {
 			req.UpdateContent,
 		)
 	}
-	severity, err := model.FindSeverity(req.Severity)
-	if err != nil {
-		return err
+	if req.Severity != "" {
+		severity, err := model.FindSeverity(req.Severity)
+		if err != nil {
+			return err
+		}
+		incident.Severity = severity
 	}
+
 	incident.Content = content
-	incident.Severity = severity
-	incident.AffectedSystems = req.Systems
+	if len(req.Systems) != 0 {
+		incident.AffectedSystems = req.Systems
+	}
 	incident.Modified = mod
 	incident.Resolved = req.Resolved
 	err = m.storage.UpdateIncident(incident)
@@ -178,16 +183,7 @@ func (m Manager) UpdateScheduled(req RequestUpdateScheduled) error {
 	if !req.Confirm {
 		return nil
 	}
-	dur, err := time.ParseDuration(req.Duration)
-	if err != nil {
-		return err
-	}
-	t, err := time.ParseInLocation("2006-01-02T15:04", req.Date, time.Local)
-	if err != nil {
-		return err
-	}
-	t = t.UTC()
-	d := model.Date(t)
+
 	incident, err := m.FindIncident(req.Filename)
 	if err != nil {
 		return err
@@ -196,9 +192,28 @@ func (m Manager) UpdateScheduled(req RequestUpdateScheduled) error {
 		incident.Content = req.Description
 	}
 
-	incident.Scheduled = &d
-	incident.AffectedSystems = req.Systems
-	incident.Duration = int(dur.Minutes())
+	if req.Date != "" {
+		t, err := time.ParseInLocation("2006-01-02T15:04", req.Date, time.Local)
+		if err != nil {
+			return err
+		}
+		t = t.UTC()
+		d := model.Date(t)
+		incident.Scheduled = &d
+	}
+
+	if len(req.Systems) != 0 {
+		incident.AffectedSystems = req.Systems
+	}
+
+	if req.Duration != "" {
+		dur, err := time.ParseDuration(req.Duration)
+		if err != nil {
+			return err
+		}
+		incident.Duration = int(dur.Minutes())
+	}
+
 	err = m.storage.UpdateIncident(incident)
 	if err != nil {
 		return err

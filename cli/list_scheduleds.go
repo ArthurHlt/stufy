@@ -10,7 +10,7 @@ import (
 )
 
 type ListScheduleds struct {
-	All  bool `short:"a" long:"all" description:"Show all incidents (by default it doesn't show resolved incident)"`
+	All  bool `long:"all" description:"Show all incidents (by default it doesn't show resolved incident)"`
 	Json bool `short:"j" long:"json" description:"Show as json"`
 }
 

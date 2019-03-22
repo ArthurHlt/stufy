@@ -3,16 +3,47 @@ package main
 import (
 	"fmt"
 	"github.com/ArthurHlt/stufy"
+	"github.com/ArthurHlt/stufy/messages"
+	"github.com/jessevdk/go-flags"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
 type DeleteIncident struct {
-	All bool `short:"a" long:"all" description:"Show all incidents (by default it doesn't show resolved incident)'"`
+	InlineFlag
+	All      bool             `long:"all" description:"Show all incidents (by default it doesn't show resolved incident)"`
+	Filename FilenameIncident `short:"f" long:"filename" description:"Set filename associated to update"`
 }
 
 var deleteIncident DeleteIncident
 
 func (c *DeleteIncident) Execute(_ []string) error {
+	if c.Inline {
+		return c.ExecuteInline()
+	}
+	return c.ExecuteSurvey()
+}
+
+func (c *DeleteIncident) ExecuteInline() error {
+	if c.Filename == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Filename flag required (--filename, -f)",
+		}
+	}
+	err := manager.DeleteIncident(stufy.RequestDelete{
+		Filename: string(c.Filename),
+		Confirm:  true,
+	})
+	if err != nil {
+		return err
+	}
+	messages.Printfln("Incident %s has been %s",
+		messages.C.Cyan(c.Filename), messages.C.Red("deleted"),
+	)
+	return nil
+}
+
+func (c *DeleteIncident) ExecuteSurvey() error {
 	incidents, err := manager.ListIncident(c.All)
 	if err != nil {
 		return err

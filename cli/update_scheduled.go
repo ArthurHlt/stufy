@@ -3,17 +3,53 @@ package main
 import (
 	"fmt"
 	"github.com/ArthurHlt/stufy"
+	"github.com/ArthurHlt/stufy/messages"
+	"github.com/jessevdk/go-flags"
 	"gopkg.in/AlecAivazis/survey.v1"
 	"time"
 )
 
 type UpdateScheduled struct {
-	All bool `short:"a" long:"all" description:"Show all scheduled tasks (by default it doesn't show finished scheduled)'"`
+	InlineFlag
+	All         bool              `long:"all" description:"Show all scheduled tasks (by default it doesn't show finished scheduled)'"`
+	Filename    FilenameScheduled `short:"f" long:"filename" description:"Set filename associated to update"`
+	Date        string            `long:"date" description:"Date when task will start (YYYY-mm-ddTHH:MM)"`
+	Duration    string            `short:"u" long:"duration" description:"Duration of your task"`
+	Description string            `short:"d" long:"description" description:"Description of the incident"`
 }
 
 var updateScheduled UpdateScheduled
 
 func (c *UpdateScheduled) Execute(_ []string) error {
+	if c.Inline {
+		return c.ExecuteInline()
+	}
+	return c.ExecuteSurvey()
+}
+
+func (c *UpdateScheduled) ExecuteInline() error {
+	if c.Filename == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Filename flag required (--filename, -f)",
+		}
+	}
+	err := manager.UpdateScheduled(stufy.RequestUpdateScheduled{
+		Filename:    string(c.Filename),
+		Systems:     c.Systems.StringSlice(),
+		Description: c.Description,
+		Date:        c.Date,
+		Duration:    c.Duration,
+		Confirm:     true,
+	})
+	if err != nil {
+		return err
+	}
+	messages.Printfln("Scheduled task %s has been %s", messages.C.Cyan(c.Filename), messages.C.Brown("updated"))
+	return nil
+}
+
+func (c *UpdateScheduled) ExecuteSurvey() error {
 	config, err := manager.Config()
 	if err != nil {
 		return err

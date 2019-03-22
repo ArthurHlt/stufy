@@ -2,16 +2,75 @@ package main
 
 import (
 	"github.com/ArthurHlt/stufy"
+	"github.com/ArthurHlt/stufy/messages"
+	"github.com/jessevdk/go-flags"
 	"gopkg.in/AlecAivazis/survey.v1"
 	"time"
 )
 
 type NewScheduled struct {
+	InlineFlag
+	Title       string `short:"l" long:"title" description:"Title of the scheduled task"`
+	Description string `short:"d" long:"description" description:"Description of the incident"`
+	Date        string `long:"date" description:"Date when task will start (YYYY-mm-ddTHH:MM)"`
+	Duration    string `short:"u" long:"duration" description:"Duration of your task"`
 }
 
 var newScheduled NewScheduled
 
 func (c *NewScheduled) Execute(_ []string) error {
+	if c.Inline {
+		return c.ExecuteInline()
+	}
+	return c.ExecuteSurvey()
+}
+
+func (c *NewScheduled) ExecuteInline() error {
+	if len(c.Systems) == 0 {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Affected system flag required (--system, -s)",
+		}
+	}
+	if c.Title == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Title flag required (--title, -l)",
+		}
+	}
+	if c.Date == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Date flag required (--date)",
+		}
+	}
+	if c.Duration == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Duration flag required (--date)",
+		}
+	}
+	if c.Description == "" {
+		return &flags.Error{
+			Type:    flags.ErrRequired,
+			Message: "Description flag, (--description, -d)",
+		}
+	}
+	err := manager.CreateScheduled(stufy.RequestScheduled{
+		Systems:     c.Systems.StringSlice(),
+		Description: c.Description,
+		Title:       c.Title,
+		Date:        c.Date,
+		Duration:    c.Duration,
+	})
+	if err != nil {
+		return err
+	}
+	messages.Println("Scheduled task has been", messages.C.Green("added"))
+	return nil
+}
+
+func (c *NewScheduled) ExecuteSurvey() error {
 	config, err := manager.Config()
 	if err != nil {
 		return err

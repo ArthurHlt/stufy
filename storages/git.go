@@ -26,6 +26,7 @@ type Git struct {
 	local      *Local
 	repo       *git.Repository
 	authMethod transport.AuthMethod
+	pulled     bool
 }
 
 func NewGit(target string) *Git {
@@ -60,13 +61,13 @@ func NewGit(target string) *Git {
 			local:      NewLocal(dir),
 		}
 	}
-	messages.Printf("Cloning %s in temp dir ", target)
 	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
+	spin.Prefix = fmt.Sprintf("Cloning %s in temp dir ", target)
 	spin.Start()
 	repo, err := git.PlainClone(dir, false, &git.CloneOptions{
-		URL:   target,
-		Auth:  authMethod,
-		Depth: 1,
+		URL:          target,
+		Auth:         authMethod,
+		SingleBranch: true,
 	})
 	if err != nil {
 		spin.Stop()
@@ -79,6 +80,7 @@ func NewGit(target string) *Git {
 		repo:       repo,
 		authMethod: authMethod,
 		local:      NewLocal(dir),
+		pulled:     true,
 	}
 }
 
@@ -87,6 +89,26 @@ func (s Git) Config() (model.Config, error) {
 }
 
 func (s Git) Incidents() (model.Incidents, error) {
+	if s.pulled {
+		return s.local.Incidents()
+	}
+	w, err := s.repo.Worktree()
+	if err != nil {
+		return model.Incidents{}, err
+	}
+	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
+	spin.Prefix = "Pulling changes from remote "
+	spin.Start()
+	err = w.Pull(&git.PullOptions{
+		Auth:         s.authMethod,
+		RemoteName:   "origin",
+		SingleBranch: true,
+	})
+	if err != nil && err.Error() != git.NoErrAlreadyUpToDate.Error() {
+		spin.Stop()
+		return model.Incidents{}, err
+	}
+	spin.Stop()
 	return s.local.Incidents()
 }
 
@@ -147,8 +169,9 @@ func (s Git) pushCommit(incident model.Incident, message string, remove bool) er
 	if err != nil {
 		return err
 	}
-	messages.Printf("Push changes in remote")
 	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
+	spin.Prefix = "Push changes in remote"
+	spin.FinalMSG = "Finished push changes in remote"
 	spin.Start()
 	defer func() {
 		spin.Stop()
@@ -160,8 +183,9 @@ func (s Git) pushCommit(incident model.Incident, message string, remove bool) er
 	})
 	if err != nil && err.Error() != git.NoErrAlreadyUpToDate.Error() {
 		err = w.Pull(&git.PullOptions{
-			Auth:       s.authMethod,
-			RemoteName: "origin",
+			Auth:         s.authMethod,
+			RemoteName:   "origin",
+			SingleBranch: true,
 		})
 		if err != nil {
 			return err
@@ -174,7 +198,6 @@ func (s Git) pushCommit(incident model.Incident, message string, remove bool) er
 	if err.Error() != git.NoErrAlreadyUpToDate.Error() {
 		return err
 	}
-	messages.Print("\rFinished push changes in remote     \n")
 	return nil
 }
 

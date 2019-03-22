@@ -30,7 +30,7 @@ func (c *ListScheduleds) Execute(_ []string) error {
 		return nil
 	}
 	table := tablewriter.NewWriter(messages.Output())
-	table.SetHeader([]string{"Title", "Last Update", "State", "Affected System", "When", "Duration", "Description"})
+	table.SetHeader([]string{"Title", "Last Update", "State", "Affected System", "When", "Duration", "Description", "Filename"})
 	table.SetRowSeparator("-")
 	table.SetBorder(false)
 	table.SetRowLine(true)
@@ -56,6 +56,7 @@ func (c *ListScheduleds) Execute(_ []string) error {
 		row = append(row, time.Time(*i.Scheduled).Format(time.RFC822))
 		row = append(row, fmt.Sprintf("%d min", i.Duration))
 		row = append(row, i.Content)
+		row = append(row, i.Filename())
 		table.Append(row)
 	}
 	table.Render()

@@ -3,7 +3,7 @@ module github.com/ArthurHlt/stufy
 go 1.12
 
 require (
-	github.com/ArthurHlt/open-golang v0.0.0-20190321224020-98094518eb79
+	github.com/ArthurHlt/open-golang v0.0.0-20190321235631-635bf58b77c4
 	github.com/briandowns/spinner v0.0.0-20190319032542-ac46072a5a91
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/ericaro/frontmatter v0.0.0-20141225210444-9fedef9406e4

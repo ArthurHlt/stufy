@@ -31,7 +31,7 @@ func (c *ListIncidents) Execute(_ []string) error {
 		return nil
 	}
 	table := tablewriter.NewWriter(messages.Output())
-	table.SetHeader([]string{"Title", "Last Update", "State", "Affected System", "Description"})
+	table.SetHeader([]string{"Title", "Last Update", "State", "Affected System", "Description", "Filename"})
 	table.SetRowSeparator("-")
 	table.SetBorder(false)
 	table.SetRowLine(true)
@@ -53,6 +53,7 @@ func (c *ListIncidents) Execute(_ []string) error {
 		row = append(row, severity)
 		row = append(row, strings.Join(i.AffectedSystems, ", "))
 		row = append(row, i.Content)
+		row = append(row, i.Filename())
 		table.Append(row)
 	}
 	table.Render()

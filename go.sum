@@ -1,5 +1,9 @@
 github.com/ArthurHlt/open-golang v0.0.0-20190321224020-98094518eb79 h1:J5ZM+xQZiEU/t3smDuGq7suyu7rEVymrBJfpv0cUGqM=
 github.com/ArthurHlt/open-golang v0.0.0-20190321224020-98094518eb79/go.mod h1:lhvtP2CYT0ViGEkViIcfUIPTPAJoDnRsHmvfAiXf6bA=
+github.com/ArthurHlt/open-golang v0.0.0-20190321235130-0c3e0aa2321a h1:Nk+o3XCdVhMKmLpkanWnep7JmaEnmbjDIovnatkmgAs=
+github.com/ArthurHlt/open-golang v0.0.0-20190321235130-0c3e0aa2321a/go.mod h1:lhvtP2CYT0ViGEkViIcfUIPTPAJoDnRsHmvfAiXf6bA=
+github.com/ArthurHlt/open-golang v0.0.0-20190321235631-635bf58b77c4 h1:Ty8DFc5pA2Y6IpX7muxY8e+nmd2L3heAyUfAHfzpO3A=
+github.com/ArthurHlt/open-golang v0.0.0-20190321235631-635bf58b77c4/go.mod h1:lhvtP2CYT0ViGEkViIcfUIPTPAJoDnRsHmvfAiXf6bA=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nBpB11F9br+3HUrpgb+fcm5iADzXXYEw=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7 h1:uSoVVbwJiQipAclBbw+8quDsfcvFjOpI5iCf4p/cqCs=

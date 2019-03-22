@@ -66,6 +66,17 @@ type Incident struct {
 	Scheduled       *Date    `yaml:"scheduled,omitempty" json:"scheduled,omitempty"`
 	Duration        int      `yaml:"duration,omitempty" json:"duration,omitempty"`
 	Content         string   `yaml:"-" fm:"content"`
+	File            string   `yaml:"-" json:"filename"`
+}
+
+func (i *Incident) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	type plain Incident
+	err := unmarshal((*plain)(i))
+	if err != nil {
+		return err
+	}
+	i.File = i.Filename()
+	return nil
 }
 
 func (i Incident) String() string {
@@ -96,7 +107,6 @@ func (d *Date) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 	t = t.In(time.Now().Location())
 	*d = Date(t)
-
 	return nil
 }
 

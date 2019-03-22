@@ -71,7 +71,7 @@ Available commands:
   update-scheduled  Update an existing scheduled task (aliases: us)
 ```
 
-**Note**: When you choose to open editor you can also set default editor with env var `EDITOR` or `VISUAL`
+**Note**: When you choose to open editor you can also set default editor with env var `EDITOR`.
 
 ## Auto completion
 

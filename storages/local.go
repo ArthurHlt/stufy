@@ -1,16 +1,17 @@
 package storages
 
 import (
+	"bytes"
 	"fmt"
-	"github.com/ArthurHlt/open-golang/open"
 	"github.com/ArthurHlt/stufy/model"
 	"github.com/ericaro/frontmatter"
+	"github.com/kioopi/extedit"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
+	"strings"
 )
 
 type Local struct {
@@ -88,20 +89,21 @@ func (l Local) DeleteIncident(incident model.Incident) error {
 	return os.Remove(incidentFile)
 }
 
-func (l Local) Open(incident model.Incident) error {
-	editor := ""
-	if runtime.GOOS == "windows" {
-		editor = "notepad"
+func (l Local) Open(incident model.Incident) (model.Incident, error) {
+	b, err := frontmatter.Marshal(incident)
+	if err != nil {
+		return incident, err
 	}
-	if v := os.Getenv("VISUAL"); v != "" {
-		editor = v
-	} else if e := os.Getenv("EDITOR"); e != "" {
-		editor = e
+	buf := bytes.NewBuffer(b)
+	diff, err := extedit.Invoke(buf)
+	if err != nil {
+		return incident, err
 	}
-	incidentFile := filepath.Join(l.folder, incidentFolder, incident.Filename())
-	if editor != "" {
-		return open.RunWithWait(incidentFile, editor)
+	b = []byte(strings.Join(diff.Lines(), "\n"))
+	var newIncident model.Incident
+	err = frontmatter.Unmarshal(b, &newIncident)
+	if err != nil {
+		return incident, err
 	}
-
-	return open.RunWait(incidentFile)
+	return newIncident, nil
 }

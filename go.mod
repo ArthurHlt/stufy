@@ -3,13 +3,13 @@ module github.com/ArthurHlt/stufy
 go 1.12
 
 require (
-	github.com/ArthurHlt/open-golang v0.0.0-20190321235631-635bf58b77c4
 	github.com/briandowns/spinner v0.0.0-20190319032542-ac46072a5a91
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/ericaro/frontmatter v0.0.0-20141225210444-9fedef9406e4
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/gliderlabs/ssh v0.1.3 // indirect
 	github.com/jessevdk/go-flags v1.4.0
+	github.com/kioopi/extedit v0.0.0-20140814205707-70132e7fbe3a
 	github.com/kr/pty v1.1.4 // indirect
 	github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e
 	github.com/mattn/go-colorable v0.1.1

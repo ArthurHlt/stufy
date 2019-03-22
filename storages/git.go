@@ -158,12 +158,8 @@ func (s Git) DeleteIncident(incident model.Incident) error {
 	return s.pushCommit(incident, "Delete incident", true)
 }
 
-func (s Git) Open(incident model.Incident) error {
-	err := s.local.Open(incident)
-	if err != nil {
-		return err
-	}
-	return s.pushCommit(incident, "Update incident", false)
+func (s Git) Open(incident model.Incident) (model.Incident, error) {
+	return s.local.Open(incident)
 }
 
 func (Git) Detect(target string) bool {

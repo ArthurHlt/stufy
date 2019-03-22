@@ -1,9 +1,3 @@
-github.com/ArthurHlt/open-golang v0.0.0-20190321224020-98094518eb79 h1:J5ZM+xQZiEU/t3smDuGq7suyu7rEVymrBJfpv0cUGqM=
-github.com/ArthurHlt/open-golang v0.0.0-20190321224020-98094518eb79/go.mod h1:lhvtP2CYT0ViGEkViIcfUIPTPAJoDnRsHmvfAiXf6bA=
-github.com/ArthurHlt/open-golang v0.0.0-20190321235130-0c3e0aa2321a h1:Nk+o3XCdVhMKmLpkanWnep7JmaEnmbjDIovnatkmgAs=
-github.com/ArthurHlt/open-golang v0.0.0-20190321235130-0c3e0aa2321a/go.mod h1:lhvtP2CYT0ViGEkViIcfUIPTPAJoDnRsHmvfAiXf6bA=
-github.com/ArthurHlt/open-golang v0.0.0-20190321235631-635bf58b77c4 h1:Ty8DFc5pA2Y6IpX7muxY8e+nmd2L3heAyUfAHfzpO3A=
-github.com/ArthurHlt/open-golang v0.0.0-20190321235631-635bf58b77c4/go.mod h1:lhvtP2CYT0ViGEkViIcfUIPTPAJoDnRsHmvfAiXf6bA=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8 h1:xzYJEypr/85nBpB11F9br+3HUrpgb+fcm5iADzXXYEw=
 github.com/Netflix/go-expect v0.0.0-20180615182759-c93bf25de8e8/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7 h1:uSoVVbwJiQipAclBbw+8quDsfcvFjOpI5iCf4p/cqCs=
@@ -39,6 +33,8 @@ github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 h1:Z9n2FFNU
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51/go.mod h1:CzGEWj7cYgsdH8dAjBGEr58BoE7ScuLd+fwFZ44+/x8=
 github.com/kevinburke/ssh_config v0.0.0-20180830205328-81db2a75821e h1:RgQk53JHp/Cjunrr1WlsXSZpqXn+uREuHvUVcK82CV8=
 github.com/kevinburke/ssh_config v0.0.0-20180830205328-81db2a75821e/go.mod h1:CT57kijsi8u/K/BOFA39wgDQJ9CxiF4nAY/ojJ6r6mM=
+github.com/kioopi/extedit v0.0.0-20140814205707-70132e7fbe3a h1:jOJwl2NN/sYXvczPv9et028D+70PYA2zLi5tIns7cFw=
+github.com/kioopi/extedit v0.0.0-20140814205707-70132e7fbe3a/go.mod h1:SDA7HZ0V6e4q0Sz3rsvsSTR/taqPOAIpButdVmsOizY=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=

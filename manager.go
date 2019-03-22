@@ -84,12 +84,15 @@ func (m Manager) CreateIncident(req RequestCreate) error {
 		AffectedSystems: req.Systems,
 		Severity:        severity,
 	}
+	if req.Open {
+		incident, err = m.storage.Open(incident)
+		if err != nil {
+			return err
+		}
+	}
 	err = m.storage.CreateIncident(incident)
 	if err != nil {
 		return err
-	}
-	if req.Open {
-		return m.storage.Open(incident)
 	}
 	return nil
 }
@@ -139,12 +142,16 @@ func (m Manager) UpdateIncident(req RequestUpdate) error {
 	}
 	incident.Modified = mod
 	incident.Resolved = req.Resolved
+
+	if req.Open {
+		incident, err = m.storage.Open(incident)
+		if err != nil {
+			return err
+		}
+	}
 	err = m.storage.UpdateIncident(incident)
 	if err != nil {
 		return err
-	}
-	if req.Open {
-		return m.storage.Open(incident)
 	}
 	return nil
 }
@@ -169,12 +176,15 @@ func (m Manager) CreateScheduled(req RequestScheduled) error {
 		Scheduled:       &d,
 		Duration:        int(dur.Minutes()),
 	}
+	if req.Open {
+		incident, err = m.storage.Open(incident)
+		if err != nil {
+			return err
+		}
+	}
 	err = m.storage.CreateIncident(incident)
 	if err != nil {
 		return err
-	}
-	if req.Open {
-		return m.storage.Open(incident)
 	}
 	return nil
 }
@@ -214,12 +224,15 @@ func (m Manager) UpdateScheduled(req RequestUpdateScheduled) error {
 		incident.Duration = int(dur.Minutes())
 	}
 
+	if req.Open {
+		incident, err = m.storage.Open(incident)
+		if err != nil {
+			return err
+		}
+	}
 	err = m.storage.UpdateIncident(incident)
 	if err != nil {
 		return err
-	}
-	if req.Open {
-		return m.storage.Open(incident)
 	}
 	return nil
 }

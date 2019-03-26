@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/ArthurHlt/stufy"
+	"github.com/ArthurHlt/stufy/loading"
 	"github.com/ArthurHlt/stufy/messages"
 	"github.com/ArthurHlt/stufy/model"
 	"github.com/jessevdk/go-flags"
@@ -86,6 +87,7 @@ func completeFilename(match string, scheduleds bool) []flags.Completion {
 		panic(err)
 	}
 	messages.SetStopShow(true)
+	loading.Hide()
 	var incidents model.Incidents
 	if !scheduleds {
 		incidents, err = manager.ListIncident(*tAllPtr)
@@ -93,6 +95,7 @@ func completeFilename(match string, scheduleds bool) []flags.Completion {
 		incidents, err = manager.ListScheduled(*tAllPtr)
 	}
 	messages.SetStopShow(false)
+	loading.Show()
 	if err != nil {
 		panic(err)
 	}

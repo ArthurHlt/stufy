@@ -1,17 +1,14 @@
 package storages
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/ArthurHlt/stufy/model"
 	"github.com/ericaro/frontmatter"
-	"github.com/kioopi/extedit"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type Local struct {
@@ -87,23 +84,4 @@ func (l Local) UpdateIncident(incident model.Incident) error {
 func (l Local) DeleteIncident(incident model.Incident) error {
 	incidentFile := filepath.Join(l.folder, incidentFolder, incident.Filename())
 	return os.Remove(incidentFile)
-}
-
-func (l Local) Open(incident model.Incident) (model.Incident, error) {
-	b, err := frontmatter.Marshal(incident)
-	if err != nil {
-		return incident, err
-	}
-	buf := bytes.NewBuffer(b)
-	diff, err := extedit.Invoke(buf)
-	if err != nil {
-		return incident, err
-	}
-	b = []byte(strings.Join(diff.Lines(), "\n"))
-	var newIncident model.Incident
-	err = frontmatter.Unmarshal(b, &newIncident)
-	if err != nil {
-		return incident, err
-	}
-	return newIncident, nil
 }

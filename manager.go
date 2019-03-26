@@ -1,9 +1,12 @@
 package stufy
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/ArthurHlt/stufy/model"
 	"github.com/ArthurHlt/stufy/storages"
+	"github.com/ericaro/frontmatter"
+	"github.com/kioopi/extedit"
 	"os"
 	"strings"
 	"time"
@@ -85,7 +88,7 @@ func (m Manager) CreateIncident(req RequestCreate) error {
 		Severity:        severity,
 	}
 	if req.Open {
-		incident, err = m.storage.Open(incident)
+		incident, err = m.Open(incident)
 		if err != nil {
 			return err
 		}
@@ -144,7 +147,7 @@ func (m Manager) UpdateIncident(req RequestUpdate) error {
 	incident.Resolved = req.Resolved
 
 	if req.Open {
-		incident, err = m.storage.Open(incident)
+		incident, err = m.Open(incident)
 		if err != nil {
 			return err
 		}
@@ -177,7 +180,7 @@ func (m Manager) CreateScheduled(req RequestScheduled) error {
 		Duration:        int(dur.Minutes()),
 	}
 	if req.Open {
-		incident, err = m.storage.Open(incident)
+		incident, err = m.Open(incident)
 		if err != nil {
 			return err
 		}
@@ -225,7 +228,7 @@ func (m Manager) UpdateScheduled(req RequestUpdateScheduled) error {
 	}
 
 	if req.Open {
-		incident, err = m.storage.Open(incident)
+		incident, err = m.Open(incident)
 		if err != nil {
 			return err
 		}
@@ -338,4 +341,23 @@ func (m *Manager) ListScheduled(showResolved bool) (model.Incidents, error) {
 		filtered = append(filtered, i)
 	}
 	return filtered, nil
+}
+
+func (m Manager) Open(incident model.Incident) (model.Incident, error) {
+	b, err := frontmatter.Marshal(incident)
+	if err != nil {
+		return incident, err
+	}
+	buf := bytes.NewBuffer(b)
+	diff, err := extedit.Invoke(buf)
+	if err != nil {
+		return incident, err
+	}
+	b = []byte(strings.Join(diff.Lines(), "\n"))
+	var newIncident model.Incident
+	err = frontmatter.Unmarshal(b, &newIncident)
+	if err != nil {
+		return incident, err
+	}
+	return newIncident, nil
 }

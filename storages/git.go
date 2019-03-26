@@ -2,6 +2,7 @@ package storages
 
 import (
 	"fmt"
+	"github.com/ArthurHlt/stufy/loading"
 	"github.com/ArthurHlt/stufy/messages"
 	"github.com/ArthurHlt/stufy/model"
 	"github.com/briandowns/spinner"
@@ -61,22 +62,16 @@ func NewGit(target string) *Git {
 			local:      NewLocal(dir),
 		}
 	}
-	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-	spin.Prefix = fmt.Sprintf("Cloning %s in temp dir ", target)
-	if !messages.StopShow() {
-		spin.Start()
-	}
-
+	loading.Start(fmt.Sprintf("Cloning %s in temp dir ", target), "", nil)
+	defer loading.Stop()
 	repo, err := git.PlainClone(dir, false, &git.CloneOptions{
 		URL:          target,
 		Auth:         authMethod,
 		SingleBranch: true,
 	})
 	if err != nil {
-		spin.Stop()
 		panic(err)
 	}
-	spin.Stop()
 	return &Git{
 		folder:     dir,
 		target:     target,
@@ -119,13 +114,12 @@ func (s Git) Incidents() (model.Incidents, error) {
 
 func (s Git) Resync() error {
 	os.RemoveAll(s.folder)
-	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-	spin.Prefix = fmt.Sprintf("Resynchronize %s in temp dir ", s.target)
-	spin.FinalMSG = fmt.Sprintf("Finished resynchronize %s\n", s.target)
-	if !messages.StopShow() {
-		spin.Start()
-	}
-	defer spin.Stop()
+	loading.Start(
+		fmt.Sprintf("Resynchronize %s in temp dir ", s.target),
+		fmt.Sprintf("Finished resynchronize %s\n", s.target),
+		nil,
+	)
+	defer loading.Stop()
 	_, err := git.PlainClone(s.folder, false, &git.CloneOptions{
 		URL:          s.target,
 		Auth:         s.authMethod,
@@ -158,10 +152,6 @@ func (s Git) DeleteIncident(incident model.Incident) error {
 	return s.pushCommit(incident, "Delete incident", true)
 }
 
-func (s Git) Open(incident model.Incident) (model.Incident, error) {
-	return s.local.Open(incident)
-}
-
 func (Git) Detect(target string) bool {
 	return strings.HasSuffix(target, ".git") || strings.HasPrefix(target, "git://")
 }
@@ -187,14 +177,13 @@ func (s Git) pushCommit(incident model.Incident, message string, remove bool) er
 	if err != nil {
 		return err
 	}
-	spin := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-	spin.Prefix = "Push changes in remote"
-	spin.FinalMSG = "Finished push changes in remote"
-	if !messages.StopShow() {
-		spin.Start()
-	}
+	loading.Start(
+		"Push changes in remote",
+		"Finished push changes in remote",
+		nil,
+	)
 	defer func() {
-		spin.Stop()
+		loading.Stop()
 		messages.Print("\r\n")
 	}()
 	err = s.repo.Push(&git.PushOptions{

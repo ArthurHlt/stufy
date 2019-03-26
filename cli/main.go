@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/ArthurHlt/stufy"
+	"github.com/ArthurHlt/stufy/loading"
 	"github.com/ArthurHlt/stufy/messages"
 	"github.com/jessevdk/go-flags"
 	"os"
@@ -73,6 +74,7 @@ func Parse(args []string) error {
 
 func main() {
 	var err error
+	loading.SetLoader(loading.NewSpinCliLoader())
 	manager, err = stufy.NewManager("")
 	if err != nil {
 		messages.Fatal(err.Error())

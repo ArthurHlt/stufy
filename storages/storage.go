@@ -17,7 +17,6 @@ type Storage interface {
 	CreateIncident(model.Incident) error
 	UpdateIncident(model.Incident) error
 	DeleteIncident(model.Incident) error
-	Open(model.Incident) (model.Incident, error)
 	Resync() error
 }
 
